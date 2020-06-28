@@ -229,7 +229,8 @@ class SoftDeleteObject(models.Model):
                 and f.auto_created and not f.concrete
             ]
             for x in all_related:
-                self._do_delete(cs, x)
+                if not x.null:
+                    self._do_delete(cs, x)
             logging.debug("FINISHED SOFT DELETING RELATED %s", self)
             models.signals.post_delete.send(sender=self.__class__,
                                             instance=self,
